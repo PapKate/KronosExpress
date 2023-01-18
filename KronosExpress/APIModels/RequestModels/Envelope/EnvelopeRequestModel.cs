@@ -11,7 +11,7 @@ namespace KronosExpress
     /// <summary>
     /// The envelope
     /// </summary>
-    [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.EnvelopeNamespace)]
+    [XmlType(TypeName = "Envelope", Namespace = KronosExpressConstants.EnvelopeNamespace)]
     [XmlRoot(Namespace = KronosExpressConstants.EnvelopeNamespace, IsNullable = false)]
     public class EnvelopeRequestModel
     {

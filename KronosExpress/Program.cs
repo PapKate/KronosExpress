@@ -18,9 +18,7 @@ namespace KronosExpress
 
         public static void Main()
         {
-            //DeserializeObject("Response.xml");
-
-            GetServices();
+            DeserializeObject("Response.xml");
 
             Console.ReadLine();
         }
@@ -31,15 +29,16 @@ namespace KronosExpress
         /// <param name="filePath">The file path</param>
         public static void DeserializeObject(string filePath)
         {
-            EnvelopeResponseModel envelope;
-            // Creates a new XML serializer of type envelope
-            var mySerializer = new XmlSerializer(typeof(EnvelopeResponseModel));
+            EnvelopeResponseModel<AnnounceAWBBodyResponseModel, AnnounceAWBResponseModel> envelope;
 
-            //  
+            // Creates a new XML serializer of type envelope
+            var mySerializer = new XmlSerializer(typeof(EnvelopeResponseModel<AnnounceAWBBodyResponseModel, AnnounceAWBResponseModel>));
+
+            // Opens the file
             var myFileStream = new FileStream(filePath, FileMode.Open);
 
             // Deserializes the stream to an envelope
-            envelope = (EnvelopeResponseModel)mySerializer.Deserialize(myFileStream);
+            envelope = (EnvelopeResponseModel<AnnounceAWBBodyResponseModel, AnnounceAWBResponseModel>)mySerializer.Deserialize(myFileStream);
 
             Console.WriteLine("test");
         }

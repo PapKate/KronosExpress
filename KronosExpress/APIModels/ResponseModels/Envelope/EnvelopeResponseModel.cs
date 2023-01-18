@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace KronosExpress
 {
     /// <summary>
     /// The envelope
     /// </summary>
-    [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.EnvelopeNamespace)]
+    [XmlType(TypeName = "Envelope", Namespace = KronosExpressConstants.EnvelopeNamespace)]
     [XmlRoot(Namespace = KronosExpressConstants.EnvelopeNamespace, IsNullable = false)]
-    public class EnvelopeResponseModel
+    public class EnvelopeResponseModel<TBody, T>
+        where TBody : class, IBodyResponseModel<T>
+        where T : class
     {
         #region Public Properties
 
@@ -21,7 +17,7 @@ namespace KronosExpress
         /// The body
         /// </summary>
         [XmlElement(ElementName = "Body")]
-        public BodyResponseModel Body { get; set; }
+        public TBody Body { get; set; }
 
         #endregion
 
