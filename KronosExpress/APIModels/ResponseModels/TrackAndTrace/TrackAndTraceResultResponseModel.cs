@@ -1,4 +1,6 @@
-﻿namespace KronosExpress
+﻿using System.Xml.Serialization;
+
+namespace KronosExpress
 {
     public class TrackAndTraceResultResponseModel
     {

@@ -19,7 +19,7 @@ namespace KronosExpress
         /// The status
         /// </summary>
         [XmlElement(ElementName = "Status")]
-        public Status Status { get; set; }
+        public string Status { get; set; }
 
         #endregion
 
