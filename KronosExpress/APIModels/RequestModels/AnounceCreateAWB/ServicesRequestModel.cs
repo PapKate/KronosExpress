@@ -12,7 +12,7 @@ namespace KronosExpress
         /// The services
         /// </summary>
         [XmlElement(ElementName = "ServicesClassAWB")]
-        public IEnumerable<ServiceClassRequestModel> ServiceClasses { get; set; }
+        public List<ServiceClassRequestModel> ServiceClasses { get; set; }
 
         #endregion
 

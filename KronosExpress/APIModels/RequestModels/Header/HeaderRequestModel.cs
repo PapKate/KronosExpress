@@ -1,21 +1,22 @@
-﻿using System.Xml;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace KronosExpress
 {
-    /// <summary>
-    /// The body
-    /// </summary>
     [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.EnvelopeNamespace)]
-    public class AnnounceAWBBodyResponseModel : IBody<AnnounceAWBResponseModel>
+    public class HeaderRequestModel
     {
         #region Public Properties
 
         /// <summary>
         /// The response of the call for getting the announcement of waybills to Kronos Express system, provided that the customer makes available the AWB
         /// </summary>
-        [XmlElement(ElementName = "AnnounceAWBResponse", Namespace = KronosExpressConstants.KronosExpressNamespace)]
-        public AnnounceAWBResponseModel Model { get; set; }
+        [XmlElement(ElementName = "AuthHeader", Namespace = KronosExpressConstants.KronosExpressNamespace)]
+        public AuthHeaderRequestModel AuthHeader { get; set; }
 
         #endregion
 
@@ -24,7 +25,7 @@ namespace KronosExpress
         /// <summary>
         /// Default constructor
         /// </summary>
-        public AnnounceAWBBodyResponseModel()
+        public HeaderRequestModel()
         {
 
         }

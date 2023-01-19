@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace KronosExpress
 {
@@ -7,15 +6,15 @@ namespace KronosExpress
     /// The body
     /// </summary>
     [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.EnvelopeNamespace)]
-    public class AnnounceAWBBodyResponseModel : IBody<AnnounceAWBResponseModel>
+    public class AnnounceAWBBodyRequestModel : IBody<AnnounceAWBRequestModel>
     {
         #region Public Properties
 
         /// <summary>
         /// The response of the call for getting the announcement of waybills to Kronos Express system, provided that the customer makes available the AWB
         /// </summary>
-        [XmlElement(ElementName = "AnnounceAWBResponse", Namespace = KronosExpressConstants.KronosExpressNamespace)]
-        public AnnounceAWBResponseModel Model { get; set; }
+        [XmlElement(ElementName = "AnnounceAWB", Namespace = KronosExpressConstants.KronosExpressNamespace)]
+        public AnnounceAWBRequestModel Model { get; set; }
 
         #endregion
 
@@ -24,7 +23,7 @@ namespace KronosExpress
         /// <summary>
         /// Default constructor
         /// </summary>
-        public AnnounceAWBBodyResponseModel()
+        public AnnounceAWBBodyRequestModel()
         {
 
         }

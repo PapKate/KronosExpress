@@ -3,6 +3,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+using System.Runtime.Serialization.Formatters;
 
 namespace KronosExpress
 {
@@ -18,9 +20,74 @@ namespace KronosExpress
 
         public static void Main()
         {
-            DeserializeObject("Response.xml");
+            //DeserializeObject("Response.xml");
+
+            SerializeObject("Request.xml");
 
             Console.ReadLine();
+        }
+
+        public static void SerializeObject(string filePath)
+        {
+            var envelope = new EnvelopeRequestModel<AnnounceAWBBodyRequestModel, AnnounceAWBRequestModel>()
+            {
+                Header = new HeaderRequestModel()
+                {
+                    AuthHeader = new AuthHeaderRequestModel()
+                    {
+                        Username = username,
+                        Password = password,
+                        Hash = "Hashhhhhhhhh"
+                    }
+                },
+                Body = new AnnounceAWBBodyRequestModel()
+                {
+                    Model = new AnnounceAWBRequestModel()
+                    {
+                        AWB = "1234",
+                        RecipientCode = "12345678",
+                        RecipientName = "John",
+                        RecipientSurname = "Smith",
+                        RecipientAddress = "221b Baker Street",
+                        RecipientPostcode = "26441",
+                        RecipientCity = "London",
+                        RecipientPhoneNumber = "6978010326",
+                        RecipientComments = "Comments on this beautiful business card: Impressive... Very nice!",
+                        WarehouseCode = "091b",
+                        ParcelWeight = "0.2g",
+                        ParcelQuantity = "1",
+                        ParcelType = ParcelType.Envelope,
+                        Services = new ServicesRequestModel()
+                        {
+                            ServiceClasses = new List<ServiceClassRequestModel>()
+                            {
+                                new ServiceClassRequestModel()
+                                {
+                                    ServiceCode = "12345gr",
+                                    ServiceDetails = "The details of this service."
+                                },
+                                new ServiceClassRequestModel()
+                                {
+                                    ServiceCode = "12345gr",
+                                    ServiceDetails = "The details of this service."
+                                }
+                            }
+                        },
+                        RecipientEmail = "john@smith.com"
+                    }
+                }
+            };
+
+            XmlTypeMapping myTypeMapping = new SoapReflectionImporter().ImportTypeMapping(typeof(EnvelopeRequestModel<AnnounceAWBBodyRequestModel, AnnounceAWBRequestModel>));
+            //var mySerializer = new XmlSerializer(myTypeMapping);
+
+            var mySerializer = new XmlSerializer(typeof(EnvelopeRequestModel<AnnounceAWBBodyRequestModel, AnnounceAWBRequestModel>));
+
+            // Opens the file
+            var myFileStream = new FileStream(filePath, FileMode.Truncate);
+            mySerializer.Serialize(myFileStream, envelope);
+
+            Console.WriteLine("serialized");
         }
 
         /// <summary>

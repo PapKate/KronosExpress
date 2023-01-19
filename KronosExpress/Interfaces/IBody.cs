@@ -3,7 +3,7 @@
     /// <summary>
     /// Provides abstractions for the body
     /// </summary>
-    public interface IBodyResponseModel<T>
+    public interface IBody<T>
         where T : class
     {
         #region Public Properties
@@ -11,7 +11,7 @@
         /// <summary>
         /// The response
         /// </summary>
-        public T ResponseModel { get; set; }
+        public T Model { get; set; }
 
         #endregion
     }

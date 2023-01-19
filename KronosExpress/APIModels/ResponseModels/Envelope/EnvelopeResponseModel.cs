@@ -8,7 +8,7 @@ namespace KronosExpress
     [XmlType(TypeName = "Envelope", Namespace = KronosExpressConstants.EnvelopeNamespace)]
     [XmlRoot(Namespace = KronosExpressConstants.EnvelopeNamespace, IsNullable = false)]
     public class EnvelopeResponseModel<TBody, T>
-        where TBody : class, IBodyResponseModel<T>
+        where TBody : class, IBody<T>
         where T : class
     {
         #region Public Properties
