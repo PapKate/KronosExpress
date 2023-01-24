@@ -78,14 +78,16 @@ namespace KronosExpress
                 }
             };
 
-            XmlTypeMapping myTypeMapping = new SoapReflectionImporter().ImportTypeMapping(typeof(EnvelopeRequestModel<AnnounceAWBBodyRequestModel, AnnounceAWBRequestModel>));
-            //var mySerializer = new XmlSerializer(myTypeMapping);
-
             var mySerializer = new XmlSerializer(typeof(EnvelopeRequestModel<AnnounceAWBBodyRequestModel, AnnounceAWBRequestModel>));
+
+            var xmlNameSpace = new XmlSerializerNamespaces();
+            xmlNameSpace.Add("soap12", KronosExpressConstants.EnvelopeNamespace);
+            xmlNameSpace.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            xmlNameSpace.Add("xsd", "https://www.w3.org/2001/XMLSchema");
 
             // Opens the file
             var myFileStream = new FileStream(filePath, FileMode.Truncate);
-            mySerializer.Serialize(myFileStream, envelope);
+            mySerializer.Serialize(myFileStream, envelope, xmlNameSpace);
 
             Console.WriteLine("serialized");
         }
