@@ -5,8 +5,8 @@ namespace KronosExpress
     /// <summary>
     /// The envelope
     /// </summary>
-    [XmlType(TypeName = "Envelope", Namespace = KronosExpressConstants.EnvelopeNamespace)]
-    [XmlRoot(Namespace = KronosExpressConstants.EnvelopeNamespace, IsNullable = false)]
+    [XmlType(TypeName = "Envelope", Namespace = KronosExpressConstants.SoapNamespace)]
+    [XmlRoot(Namespace = KronosExpressConstants.SoapNamespace, IsNullable = false)]
     public class EnvelopeResponseModel<TBody, T>
         where TBody : class, IBody<T>
         where T : class

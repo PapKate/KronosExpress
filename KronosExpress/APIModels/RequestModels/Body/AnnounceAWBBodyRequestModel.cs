@@ -5,7 +5,7 @@ namespace KronosExpress
     /// <summary>
     /// The body
     /// </summary>
-    [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.EnvelopeNamespace)]
+    [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.SoapNamespace)]
     public class AnnounceAWBBodyRequestModel : IBody<AnnounceAWBRequestModel>
     {
         #region Public Properties

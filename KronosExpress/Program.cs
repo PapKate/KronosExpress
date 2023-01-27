@@ -5,6 +5,8 @@ using System.Xml.Serialization;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Runtime.Serialization.Formatters;
+using System.IO;
+using System.Collections;
 
 namespace KronosExpress
 {
@@ -21,13 +23,13 @@ namespace KronosExpress
         public static void Main()
         {
             //DeserializeObject("Response.xml");
-
-            SerializeObject("Request.xml");
-
+            GetServices();
+            //SerializeObject("Request.xml");
+            //TrackAndTrace("test");
             Console.ReadLine();
         }
 
-        public static void SerializeObject(string filePath)
+        public static async void SerializeObject(string filePath)
         {
             var envelope = new EnvelopeRequestModel<AnnounceAWBBodyRequestModel, AnnounceAWBRequestModel>()
             {
@@ -37,7 +39,7 @@ namespace KronosExpress
                     {
                         Username = username,
                         Password = password,
-                        Hash = "Hashhhhhhhhh"
+                        Hash = ""
                     }
                 },
                 Body = new AnnounceAWBBodyRequestModel()
@@ -81,13 +83,17 @@ namespace KronosExpress
             var mySerializer = new XmlSerializer(typeof(EnvelopeRequestModel<AnnounceAWBBodyRequestModel, AnnounceAWBRequestModel>));
 
             var xmlNameSpace = new XmlSerializerNamespaces();
-            xmlNameSpace.Add("soap12", KronosExpressConstants.EnvelopeNamespace);
-            xmlNameSpace.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            xmlNameSpace.Add("xsd", "https://www.w3.org/2001/XMLSchema");
+            xmlNameSpace.Add(KronosExpressConstants.Soap, KronosExpressConstants.SoapNamespace);
+            xmlNameSpace.Add(KronosExpressConstants.Xsd, KronosExpressConstants.XsdNamespace);
+            xmlNameSpace.Add(KronosExpressConstants.Xsi, KronosExpressConstants.XsiNamespace);
 
             // Opens the file
             var myFileStream = new FileStream(filePath, FileMode.Truncate);
             mySerializer.Serialize(myFileStream, envelope, xmlNameSpace);
+
+            var myStreamWriter = new StreamWriter(myFileStream);
+            myStreamWriter.Write(uniquekey);
+            myStreamWriter.Flush();
 
             Console.WriteLine("serialized");
         }
@@ -136,11 +142,72 @@ namespace KronosExpress
                     manager.AddNamespace("res", _namespaceeshop);
                     XmlNodeList xnList = document.SelectNodes("//res:ServicesClass", manager);
                     int nodes = xnList.Count;
-                    List<TrackAndTraceClassResponseModel> obj = new List<TrackAndTraceClassResponseModel>();
+                    List<ServicesClassResponseModel> obj = new List<ServicesClassResponseModel>();
                     foreach (XmlNode xn in xnList)
                     {
                         var code = xn["Code"].InnerText;
                         var description = xn["Description"].InnerText;
+                    }
+                }
+            }
+        }
+
+        public static async Task<string> HashToSHA265Async(FileStream fileStream)
+        {
+            var myStreamReader = new StreamReader(fileStream);
+            var fileText = await myStreamReader.ReadToEndAsync();
+            var result = await HashToSHA265Async(fileText);
+
+            return result;
+        }
+
+        public static async Task<string> HashToSHA265Async(string value)
+        {
+            var unicodeEncoding = new UnicodeEncoding();
+            var message = unicodeEncoding.GetBytes(value);
+
+            var hashMode = SHA256.Create();
+            var hashValue = hashMode.ComputeHash(message);
+
+            var result = string.Empty;
+            foreach (var x in hashValue)
+                result += string.Format("{0:x2}", x);
+
+            return result;
+        }
+
+        public static void TrackAndTrace(string awb)
+        {
+            HttpWebRequest request = CreateWebRequest(host);
+            XmlDocument soapEnvelopeXml = new XmlDocument();
+            string xml =
+           File.ReadAllText("trackAndTraceRequest.xml").Replace("@username", username).Replace("@password", Sha(password)).Replace("@awb", awb);
+            var hash = Sha(xml + uniquekey);
+            xml = xml.Replace("<Hash></Hash>", "<Hash>" + hash.Trim() + "</Hash>");
+            soapEnvelopeXml.LoadXml(xml);
+            using (Stream stream = request.GetRequestStream())
+            {
+                soapEnvelopeXml.Save(stream);
+            }
+            using (WebResponse response = request.GetResponse())
+            {
+                using (StreamReader rd = new StreamReader(response.GetResponseStream(),
+               Encoding.UTF8))
+                {
+                    string soapResult = rd.ReadToEnd();
+                    XmlDocument document = new XmlDocument();
+                    document.LoadXml(soapResult); //loading soap message as string 
+                    XmlNamespaceManager manager = new
+                    XmlNamespaceManager(document.NameTable);
+                    manager.AddNamespace("res", _namespaceeshop);
+                    XmlNodeList xnList = document.SelectNodes("//res:TrackAndTraceClass", manager);
+                    int nodes = xnList.Count;
+                    List<TrackAndTraceClassResponseModel> obj = new List<TrackAndTraceClassResponseModel>();
+                    foreach (XmlNode xn in xnList)
+                    {
+                        var Date = xn["Date"].InnerText;
+                        var SettlementID = xn["SettlementID"].InnerText;
+                        var Status = xn["Status"].InnerText;
                     }
                 }
             }
@@ -155,7 +222,7 @@ namespace KronosExpress
             hashValue = hashString.ComputeHash(message);
             foreach (byte x in hashValue)
             {
-                hex += string.Format("{0:x2}", x);
+                hex += String.Format("{0:x2}", x);
             }
             return hex;
         }
@@ -164,12 +231,11 @@ namespace KronosExpress
         {
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
             webRequest.Headers.Add(@"SOAP:Action");
-            webRequest.ContentType = "text/xml; charset=utf-8";
+            webRequest.ContentType = "application/soap+xml; charset=utf-8";
             webRequest.Method = "POST";
             return webRequest;
         }
 
-
         #endregion
     }
-    }
+}

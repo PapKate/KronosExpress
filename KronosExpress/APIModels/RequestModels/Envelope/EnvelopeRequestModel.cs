@@ -11,8 +11,8 @@ namespace KronosExpress
     /// <summary>
     /// The envelope
     /// </summary>
-    [XmlType(TypeName = "Envelope", Namespace = KronosExpressConstants.EnvelopeNamespace)]
-    [XmlRoot(Namespace = KronosExpressConstants.EnvelopeNamespace, IsNullable = false)]
+    [XmlType(TypeName = "Envelope", Namespace = KronosExpressConstants.SoapNamespace)]
+    [XmlRoot(Namespace = KronosExpressConstants.SoapNamespace, IsNullable = false)]
     public class EnvelopeRequestModel<TBody, T>
         where TBody : class, IBody<T>
         where T : class
@@ -22,13 +22,13 @@ namespace KronosExpress
         /// <summary>
         /// The response of the call for getting the announcement of waybills to Kronos Express system, provided that the customer makes available the AWB
         /// </summary>
-        [XmlElement(ElementName = "Header", Namespace = KronosExpressConstants.EnvelopeNamespace)]
+        [XmlElement(ElementName = "Header", Namespace = KronosExpressConstants.SoapNamespace)]
         public HeaderRequestModel Header { get; set; }
 
         /// <summary>
         /// The body
         /// </summary>
-        [XmlElement(ElementName = "Body", Namespace = KronosExpressConstants.EnvelopeNamespace)]
+        [XmlElement(ElementName = "Body", Namespace = KronosExpressConstants.SoapNamespace)]
         public TBody Body { get; set; }
 
         #endregion

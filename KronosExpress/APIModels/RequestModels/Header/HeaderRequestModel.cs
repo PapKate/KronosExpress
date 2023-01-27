@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace KronosExpress
 {
-    [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.EnvelopeNamespace)]
+    [XmlType(AnonymousType = true, Namespace = KronosExpressConstants.SoapNamespace)]
     public class HeaderRequestModel
     {
         #region Public Properties
